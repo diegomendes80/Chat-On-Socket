@@ -13,7 +13,7 @@ def listen_mensage(conection):
                 break
            
             mensage = data.decode('utf-8')
-            print(f"\nReceived message: {mensage}")
+            print(f"\nCliente: {mensage}")
         except Exception as e:
             print(f"\nError receiving message: {e}")
             break
@@ -26,7 +26,8 @@ def send_mensage(conection):
     
     while True:
         try:
-            mensage = input("\nEnter a message to send (or 'exit' to quit): ")
+            print("\nEnter a message to send (or 'exit' to quit): ")
+            mensage = input("\nYou: ")
             
             if not mensage.strip():
                 continue
@@ -51,7 +52,11 @@ def start_server():
     
     server.bind((HOST, PORT))
     server.listen()
-    print("\n Server is listening on {}:{}".format(HOST, PORT))
+    print("\n[Status] Server is listening on {}:{}".format(HOST, PORT))
+    
+    conection, address = server.accept()
+    
+    print(f"[Status] Client connected from {address}")
     
     receiver_thread = threading.Thread(target=listen_mensage, args=(conection,), daemon=True)
     sender_thread = threading.Thread(target=send_mensage, args=(conection,))
