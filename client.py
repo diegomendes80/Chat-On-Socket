@@ -4,6 +4,7 @@ import threading
 SERVER_IP = '127.0.0.1' #mudar o ip pra maquina host real
 PORT = 12345
 
+#Mesma coisa do host.py, só que do lado do cliente. O cliente se conecta ao servidor e tem uma thread para ouvir mensagens do servidor e outra para enviar mensagens para o servidor. O cliente continua a enviar e receber mensagens até que o usuário digite "exit" ou a conexão seja fechada.
 def listen_mensage(conection):
     while True:
         try:
@@ -22,7 +23,7 @@ def listen_mensage(conection):
     print("\nClosing connection.")
     conection.close()
     
-    
+#MEsma coisa do host    
 def send_mensage(conection):
     print("\nConnection is ready to send messages.")
     
@@ -46,12 +47,15 @@ def send_mensage(conection):
     print("\nClosing connection.")
     conection.close()
     
+#Semelhante ao host mas com algumas diferenças    
 def start_client():
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     
     try:
         print("[Status] Connecting to server at {}:{}".format(SERVER_IP, PORT))
-        client.connect((SERVER_IP, PORT))
+        
+        #three-way handshake do TCP feito pelo cliente. Cliente envia um SYN, o servidor responde com um SYN-ACK, e o cliente responde com um ACK. Depois disso, a conexão é estabelecida e o cliente pode começar a enviar e receber mensagens.
+        client.connect((SERVER_IP, PORT)) 
         print("[Status] Connected to server.")
         
         thread_receiver = threading.Thread(target=listen_mensage, args=(client,),daemon=True)
